@@ -1,0 +1,11 @@
+name: WhosAFK
+main: whosafk.WhosAFK
+version: 1.0
+
+commands:
+    afk:
+        description: Sets your status to AFK.
+        usage: /<command> to be AFK
+    whosafkcolor:
+        description: Sets the color of the WhosAFK plugin.
+        usage: /<command> [color]
