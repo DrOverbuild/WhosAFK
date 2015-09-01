@@ -70,8 +70,7 @@ public class WhosAFK extends JavaPlugin{
 	}
 	
 	public Player getPlayer(String playerName){
-		Player[] onlinePlayers = getServer().getOnlinePlayers();
-		for(Player p:onlinePlayers){
+		for(Player p:getServer().getOnlinePlayers()){
 			if(p.getName().equals(playerName)){
 				return p;
 			}
