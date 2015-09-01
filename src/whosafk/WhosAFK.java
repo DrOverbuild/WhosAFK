@@ -40,6 +40,7 @@ public class WhosAFK extends JavaPlugin{
 	@Override
 	public void onDisable() {
 		saveConfig();
+
 		getLogger().info("WhosAFK is being disabled. If you are uninstalling WhosAFK, please remember to\n"
 				       + "use the command \"/scoreboard teams remove afkers\" to remove the scoreboard.");
 	}
