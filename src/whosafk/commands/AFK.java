@@ -2,23 +2,24 @@
  $ Copyright (c) 2014 Jasper Reddin
  $ All rights reserved.
  */
-package whosafk;
+package whosafk.commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import whosafk.WhosAFK;
 
 /**
  *
  * @author jasper
  */
-public class WhosAFKCommandExecutor implements CommandExecutor{
+public class AFK implements CommandExecutor{
 	
 	WhosAFK plugin;
 
-	public WhosAFKCommandExecutor(WhosAFK plugin) {
+	public AFK(WhosAFK plugin) {
 		this.plugin = plugin;
 	}
 	
@@ -43,13 +44,10 @@ public class WhosAFKCommandExecutor implements CommandExecutor{
 			sender.sendMessage("You must be a player!");
 			return true;
 		}
-		
-		if (name.equalsIgnoreCase("afk")){
-			plugin.toggleAFKStatus(p);
-			return true;
-		}
-		
+
+		plugin.toggleAFKStatus(p);
 		return true;
+
 	}
 	
 }

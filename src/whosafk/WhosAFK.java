@@ -10,21 +10,22 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Team;
+import whosafk.commands.AFK;
 
 public class WhosAFK extends JavaPlugin{
 	
 	WhosAFKEventHandler handler;
-	WhosAFKCommandExecutor executor;
+	AFK afkCommand;
 	
 	Map<Player, Integer> afkTimes = new HashMap<>();
 	
 	@Override
 	public void onEnable() {
 		handler = new WhosAFKEventHandler(this);
-		executor = new WhosAFKCommandExecutor(this);
+		afkCommand = new AFK(this);
 		
 		getServer().getPluginManager().registerEvents(handler, this);
-		getCommand("afk").setExecutor(executor);
+		getCommand("afk").setExecutor(afkCommand);
 		
 		try {
 			Team team = getServer().getScoreboardManager().getMainScoreboard().registerNewTeam("afkers");
