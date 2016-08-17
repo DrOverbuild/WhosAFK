@@ -9,6 +9,7 @@ import org.bukkit.event.HandlerList;
  * Created by jasper on 8/17/16.
  */
 public class WhosAFKEvent extends Event implements Cancellable {
+	private static final HandlerList handlers = new HandlerList();
 	private boolean cancelled = false;
 	String message;
 	Player player;
@@ -28,11 +29,6 @@ public class WhosAFKEvent extends Event implements Cancellable {
 		cancelled = b;
 	}
 
-	@Override
-	public HandlerList getHandlers() {
-		return null;
-	}
-
 	public String getMessage() {
 		return message;
 	}
@@ -47,5 +43,14 @@ public class WhosAFKEvent extends Event implements Cancellable {
 
 	public void setPlayer(Player player) {
 		this.player = player;
+	}
+
+	public static HandlerList getHandlerList(){
+		return handlers;
+	}
+
+	@Override
+	public HandlerList getHandlers() {
+		return handlers;
 	}
 }

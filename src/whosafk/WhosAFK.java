@@ -12,6 +12,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Team;
 import whosafk.commands.AFK;
 import whosafk.events.AFKStatusOffEvent;
+import whosafk.events.AFKStatusOnEvent;
 
 public class WhosAFK extends JavaPlugin{
 	public static WhosAFK instance;
@@ -81,7 +82,7 @@ public class WhosAFK extends JavaPlugin{
 	}
 
 	public void addAFKStatus(Player p){
-		AFKStatusOffEvent event = new AFKStatusOffEvent("* " + ChatColor.BLUE + p.getName() + " is now AFK.", p);
+		AFKStatusOnEvent event = new AFKStatusOnEvent("* " + ChatColor.BLUE + p.getName() + " is now AFK.", p);
 		getServer().getPluginManager().callEvent(event);
 
 		if(!event.isCancelled()) {
