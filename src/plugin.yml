@@ -1,6 +1,6 @@
 name: WhosAFK
 main: whosafk.WhosAFK
-version: beta-4.1
+version: 1.0
 
 commands:
     afk:

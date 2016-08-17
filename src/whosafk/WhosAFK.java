@@ -11,8 +11,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Team;
 import whosafk.commands.AFK;
+import whosafk.events.AFKStatusOffEvent;
 
 public class WhosAFK extends JavaPlugin{
+	public static WhosAFK instance;
 	
 	WhosAFKEventHandler handler;
 	AFK afkCommand;
@@ -36,6 +38,8 @@ public class WhosAFK extends JavaPlugin{
 		}
 		
 		getServer().getScheduler().runTaskTimer(this, new WhosAFKRunnable(this), 100, 100);
+
+		instance = this;
 	}
 
 	@Override
@@ -53,20 +57,45 @@ public class WhosAFK extends JavaPlugin{
 	}
 
 	public void toggleAFKStatus(Player p){
-		Team team = getServer().getScoreboardManager().getMainScoreboard().getTeam("afkers");
 		if(playerIsAFK(p)){
 				removeAFKStatus(p);
 		}else{
-			getServer().broadcastMessage("* " + ChatColor.BLUE + p.getName() + " is now AFK.");
-			team.addPlayer(getServer().getOfflinePlayer(p.getUniqueId()));
+			addAFKStatus(p);
 		}
 	}
 	
 	public void removeAFKStatus(Player p){
-		getServer().getScoreboardManager().getMainScoreboard().getTeam("afkers").removePlayer(getServer().getOfflinePlayer(p.getUniqueId()));
-		getServer().broadcastMessage("* " + ChatColor.BLUE + p.getName() + " is no longer AFK.");
+		AFKStatusOffEvent event = new AFKStatusOffEvent("* " + ChatColor.BLUE + p.getName() + " is no longer AFK.", p);
+		getServer().getPluginManager().callEvent(event);
+
+		if(!event.isCancelled()) {
+			if(event.getPlayer() != null) {
+				getServer().getScoreboardManager().getMainScoreboard().getTeam("afkers")
+						.removePlayer(getServer().getOfflinePlayer(event.getPlayer().getUniqueId()));
+			}
+
+			if (event.getMessage() != null) {
+				getServer().broadcastMessage(event.getMessage());
+			}
+		}
 	}
-	
+
+	public void addAFKStatus(Player p){
+		AFKStatusOffEvent event = new AFKStatusOffEvent("* " + ChatColor.BLUE + p.getName() + " is now AFK.", p);
+		getServer().getPluginManager().callEvent(event);
+
+		if(!event.isCancelled()) {
+			if(event.getPlayer() != null) {
+				Team team = getServer().getScoreboardManager().getMainScoreboard().getTeam("afkers");
+				team.addPlayer(getServer().getOfflinePlayer(p.getUniqueId()));
+			}
+
+			if(event.getMessage() != null){
+				getServer().broadcastMessage(event.getMessage());
+			}
+		}
+	}
+
 	public boolean playerIsAFK(Player p){
 		Team team = getServer().getScoreboardManager().getMainScoreboard().getTeam("afkers");
 		return team.hasPlayer(getServer().getOfflinePlayer(p.getUniqueId()));
