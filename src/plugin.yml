@@ -17,6 +17,9 @@ permissions:
   whosafk.afk:
     description: Allows player to use /afk.
     default: true
+  whosafk.autoafk:
+    description: Allows players to automatically go in to AFK mode.
+    default: true
   whosafk.reload:
     description: Allows player to reload config.
     default: op

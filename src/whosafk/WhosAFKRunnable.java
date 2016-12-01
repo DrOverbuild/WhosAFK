@@ -21,6 +21,10 @@ public class WhosAFKRunnable implements Runnable{
 	public void run() {
 		if (plugin.getConfigManager().getAutoAFKEnabled()) {
 			for (Player p : Bukkit.getOnlinePlayers()) {
+				if (!p.hasPermission("whosafk.autoafk")){
+					return;
+				}
+
 				if (plugin.playerIsAFK(p)) {
 					return;
 				}
