@@ -95,12 +95,19 @@ public class WhosAFKEventHandler implements Listener{
 	public void playerMoves(PlayerMoveEvent e){
 		plugin.getAfkTimes().replace(e.getPlayer(), 0);
 		if(plugin.playerIsAFK(e.getPlayer())){
-			if(			!(  e.getFrom().getX()==e.getTo().getX()
-						  &&e.getFrom().getY()==e.getTo().getY()
-						  &&e.getFrom().getZ()==e.getTo().getZ()
+			if(			!(  e.getFrom().getBlockX()==e.getTo().getBlockX()
+						  &&e.getFrom().getBlockY()==e.getTo().getBlockY()
+						  &&e.getFrom().getBlockZ()==e.getTo().getBlockZ()
 					     )
 			  ){
-				plugin.removeAFKStatus(e.getPlayer());
+				if (!plugin.getConfigManager().getAllowMovementWhileAFK()){
+					e.setCancelled(true);
+					return;
+				}
+
+				if (plugin.getConfigManager().getMovementAffectsAFK()) {
+					plugin.removeAFKStatus(e.getPlayer());
+				}
 			}
 		}
 	}

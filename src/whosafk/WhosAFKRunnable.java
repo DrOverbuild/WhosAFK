@@ -19,19 +19,21 @@ public class WhosAFKRunnable implements Runnable{
 
 	@Override
 	public void run() {
-		for(Player p:Bukkit.getOnlinePlayers()){
-			if(plugin.playerIsAFK(p)){
-				return;
-			}
-			
-			if(plugin.getAfkTimes().containsKey(p)){
-				plugin.getAfkTimes().replace(p, plugin.getAfkTimes().get(p) + 1);
-			}else{
-				plugin.getAfkTimes().put(p, 0);
-			}
-			
-			if(plugin.getAfkTimes().get(p) > 60){
-				plugin.toggleAFKStatus(p);
+		if (plugin.getConfigManager().getAutoAFKEnabled()) {
+			for (Player p : Bukkit.getOnlinePlayers()) {
+				if (plugin.playerIsAFK(p)) {
+					return;
+				}
+
+				if (plugin.getAfkTimes().containsKey(p)) {
+					plugin.getAfkTimes().replace(p, plugin.getAfkTimes().get(p) + 1);
+				} else {
+					plugin.getAfkTimes().put(p, 0);
+				}
+
+				if (plugin.getAfkTimes().get(p) > plugin.getConfigManager().getAutoAFKTimeOut()) {
+					plugin.toggleAFKStatus(p);
+				}
 			}
 		}
 	}

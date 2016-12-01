@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Team;
 import whosafk.commands.AFK;
+import whosafk.commands.WHOSAFKRELOAD;
 import whosafk.events.AFKStatusOffEvent;
 import whosafk.events.AFKStatusOnEvent;
 
@@ -19,26 +20,35 @@ public class WhosAFK extends JavaPlugin{
 	
 	WhosAFKEventHandler handler;
 	AFK afkCommand;
-	
+	ConfigManager configManager;
+
 	Map<Player, Integer> afkTimes = new HashMap<>();
 	
 	@Override
 	public void onEnable() {
 		handler = new WhosAFKEventHandler(this);
 		afkCommand = new AFK(this);
-		
+		configManager = new ConfigManager(this);
+
+
 		getServer().getPluginManager().registerEvents(handler, this);
 		getCommand("afk").setExecutor(afkCommand);
-		
+		getCommand("whosafkreload").setExecutor(new WHOSAFKRELOAD(this));
+
 		try {
 			Team team = getServer().getScoreboardManager().getMainScoreboard().registerNewTeam("afkers");
 			team.setPrefix(ChatColor.BLUE + "");
 			team.setSuffix(" (AFK)");
 		} catch (IllegalArgumentException e) {
-			// Team will already have existed. We will use the already existing team.
+			// Team already exists. We will use the already existing team.
+			Team team = getServer().getScoreboardManager().getMainScoreboard().getTeam("afkers");
+			team.setPrefix(ChatColor.BLUE + "");
+			team.setSuffix(" (AFK)");
 		}
-		
-		getServer().getScheduler().runTaskTimer(this, new WhosAFKRunnable(this), 100, 100);
+
+		configManager.loadConfig();
+
+		getServer().getScheduler().runTaskTimer(this, new WhosAFKRunnable(this), 20, 20);
 
 		instance = this;
 	}
@@ -51,6 +61,10 @@ public class WhosAFK extends JavaPlugin{
 
 		getLogger().info("WhosAFK is being disabled. If you are uninstalling WhosAFK, please remember to\n"
 				       + "use the command \"/scoreboard teams remove afkers\" to remove the scoreboard.");
+	}
+
+	public ConfigManager getConfigManager() {
+		return configManager;
 	}
 
 	public Map<Player, Integer> getAfkTimes() {

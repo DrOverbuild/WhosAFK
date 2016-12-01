@@ -1,11 +1,22 @@
 name: WhosAFK
 main: whosafk.WhosAFK
-version: 1.0
+version: 1.1.1
+author: Jasper Reddin
 
 commands:
-    afk:
-        description: Sets your status to AFK.
-        usage: /<command> to be AFK
-#    whosafkcolor:
-#        description: Sets the color of the WhosAFK plugin.
-#        usage: /<command> [color]
+  afk:
+    description: Sets your status to AFK.
+    usage: /<command> to be AFK
+    permission: whosafk.afk
+  whosafkreload:
+    description: Reloads the WhosAFK configuration file.
+    usage: /<command>
+    permission: whosafk.reload
+
+permissions:
+  whosafk.afk:
+    description: Allows player to use /afk.
+    default: true
+  whosafk.reload:
+    description: Allows player to reload config.
+    default: op
