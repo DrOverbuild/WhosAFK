@@ -9,12 +9,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.player.PlayerChatEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
+
+import java.util.logging.Level;
 
 /**
  *
@@ -35,8 +34,7 @@ public class WhosAFKEventHandler implements Listener{
 				plugin.removeAFKStatus(e.getPlayer());
 			}
 		}catch(Exception ex){
-			plugin.getLogger().info("An error has occurred but don't worry because it has been handled.");
-			// ^ not really
+			plugin.getLogger().log(Level.WARNING, "Exception thrown trying to remove AFK status from player", ex);
 		}
 		plugin.getAfkTimes().remove(e.getPlayer());
 	}
@@ -68,7 +66,6 @@ public class WhosAFKEventHandler implements Listener{
 				}
 			}
 		}catch(Exception ex){
-			
 		}
 	}
 	
@@ -113,10 +110,20 @@ public class WhosAFKEventHandler implements Listener{
 	}
 	
 	@EventHandler
-	public void playerChats(PlayerChatEvent e){
+	public void playerChats(AsyncPlayerChatEvent e){
 		plugin.getAfkTimes().replace(e.getPlayer(), 0);
 		if(plugin.playerIsAFK(e.getPlayer())){
 			plugin.removeAFKStatus(e.getPlayer());
+		}
+	}
+
+	@EventHandler
+	public void entityTargetsPlayer(EntityTargetLivingEntityEvent e) {
+		if (e.getTarget() instanceof Player) {
+			Player target = (Player) e.getTarget();
+			if (plugin.playerIsAFK(target)) {
+				e.setCancelled(true);
+			}
 		}
 	}
 }

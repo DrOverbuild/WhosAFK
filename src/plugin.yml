@@ -1,7 +1,8 @@
 name: WhosAFK
 main: whosafk.WhosAFK
-version: 1.1.1
+version: 1.2.0
 author: Jasper Reddin
+api-version: 1.16
 
 commands:
   afk:
